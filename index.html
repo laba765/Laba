@@ -14,7 +14,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
       overflow-y: auto;
       color: #333;
     }
@@ -74,15 +74,58 @@
       transform: scale(1.03);
     }
 
+    /* Anonim toggle switch */
     .anon-toggle {
       display: flex;
       align-items: center;
-      justify-content: start;
-      margin-top: 10px;
-      gap: 8px;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding: 10px 0;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 26px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
       cursor: pointer;
-      font-size: 14px;
-      color: #555;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 26px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4f46e5;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(24px);
     }
 
     .status-box {
@@ -123,6 +166,17 @@
       from {opacity: 0; transform: translateY(10px);}
       to {opacity: 1; transform: translateY(0);}
     }
+
+    .success-message {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 15px;
+      font-size: 14px;
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
   </style>
 </head>
 <body>
@@ -132,17 +186,21 @@
     <form id="messageForm">
       <input type="text" id="nameInput" name="name" placeholder="Adınız (isteğe bağlı)" />
       <div class="anon-toggle">
-        <input type="checkbox" id="anonCheck" />
-        <label for="anonCheck">Anonim olarak yaz</label>
+        <span>Anonim olarak yaz</span>
+        <label class="switch">
+          <input type="checkbox" id="anonCheck">
+          <span class="slider"></span>
+        </label>
       </div>
       <textarea id="messageInput" name="message" placeholder="Mesajınızı yazın..." required></textarea>
       <button type="submit">Gönder</button>
+      <div class="success-message" id="successMessage">✅ Mesajınız gönderildi!</div>
     </form>
     <div class="message-log" id="messageLog"></div>
   </div>
 
   <script>
-    const FORM_ENDPOINT = "https://formspree.io/f/mrbowake"; // Formspree endpoint'ini buraya ekle
+    const FORM_ENDPOINT = "https://formspree.io/f/mrbowake";
 
     // Sayfa ziyaret bildirimi (gizli)
     window.addEventListener('load', () => {
@@ -156,8 +214,8 @@
     const nameInput = document.getElementById('nameInput');
     const messageInput = document.getElementById('messageInput');
     const messageLog = document.getElementById('messageLog');
+    const successMessage = document.getElementById('successMessage');
 
-    // Anonim seçilince ad alanını gizle
     anonCheck.addEventListener('change', () => {
       if (anonCheck.checked) {
         nameInput.style.display = 'none';
@@ -167,7 +225,6 @@
       }
     });
 
-    // Form gönderimi
     document.getElementById('messageForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const isAnon = anonCheck.checked;
@@ -190,8 +247,12 @@
       messageLog.prepend(msgBox);
 
       messageInput.value = '';
+
+      successMessage.style.display = 'block';
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+      }, 3000);
     });
   </script>
 </body>
-        </html>
-        
+</html>
