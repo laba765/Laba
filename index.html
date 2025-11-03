@@ -74,7 +74,6 @@
       transform: scale(1.03);
     }
 
-    /* Anonim toggle switch */
     .anon-toggle {
       display: flex;
       align-items: center;
@@ -177,12 +176,22 @@
       display: none;
       animation: fadeIn 0.5s ease;
     }
+
+    .error-message {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 14px;
+      display: none;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="status-box" id="activityBox">Anon-#### ziyaret etti</div>
-    <h2>Bir mesaj bırak 💬 <br> verilen yanıtı görmek için  bir şifre de belirtin mesajınızla birlikte , her yanıt sadece kişiye özeldir </h2>
+    <h2>Bir mesaj bırak 💬</h2>
     <form id="messageForm">
       <input type="text" id="nameInput" name="name" placeholder="Adınız (isteğe bağlı)" />
       <div class="anon-toggle">
@@ -193,6 +202,8 @@
         </label>
       </div>
       <textarea id="messageInput" name="message" placeholder="Mesajınızı yazın..." required></textarea>
+      <input type="text" id="passwordInput" name="password" placeholder="Yanıt alabilmek için bir şifre belirleyin (zorunlu)" required />
+      <div class="error-message" id="errorMessage">⚠️ Lütfen yanıt için bir şifre belirleyin.</div>
       <button type="submit">Gönder</button>
       <div class="success-message" id="successMessage">✅ Mesajınız gönderildi!</div>
     </form>
@@ -202,7 +213,6 @@
   <script>
     const FORM_ENDPOINT = "https://formspree.io/f/mrbowake";
 
-    // Sayfa ziyaret bildirimi (gizli)
     window.addEventListener('load', () => {
       const anonId = Math.floor(1000 + Math.random() * 9000);
       document.getElementById('activityBox').innerText = `Anon-${anonId} ziyaret etti`;
@@ -213,8 +223,10 @@
     const anonCheck = document.getElementById('anonCheck');
     const nameInput = document.getElementById('nameInput');
     const messageInput = document.getElementById('messageInput');
+    const passwordInput = document.getElementById('passwordInput');
     const messageLog = document.getElementById('messageLog');
     const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
 
     anonCheck.addEventListener('change', () => {
       if (anonCheck.checked) {
@@ -231,9 +243,17 @@
       const anonId = Math.floor(1000 + Math.random() * 9000);
       const name = isAnon ? `Anon-${anonId}` : (nameInput.value || 'İsimsiz');
       const message = messageInput.value.trim();
-      if (!message) return;
+      const password = passwordInput.value.trim();
 
-      const data = { name, message };
+      if (!message) return;
+      if (!password) {
+        errorMessage.style.display = 'block';
+        return;
+      } else {
+        errorMessage.style.display = 'none';
+      }
+
+      const data = { name, message, password };
 
       await fetch(FORM_ENDPOINT, {
         method: 'POST',
@@ -247,6 +267,7 @@
       messageLog.prepend(msgBox);
 
       messageInput.value = '';
+      passwordInput.value = '';
 
       successMessage.style.display = 'block';
       setTimeout(() => {
@@ -255,4 +276,4 @@
     });
   </script>
 </body>
-</html>
+                                               </html>
