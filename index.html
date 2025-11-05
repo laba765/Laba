@@ -5,67 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mesaj Sayfası</title>
   <style>
+    :root {
+      --primary: #4f46e5;
+      --bg: #f3f4ff;
+      --text: #222;
+      --card: #ffffff;
+      --border: #ddd;
+      --shadow: rgba(0,0,0,0.1);
+    }
+
+    body.dark {
+      --primary: #6366f1;
+      --bg: #111;
+      --text: #eee;
+      --card: #1a1a1a;
+      --border: #333;
+      --shadow: rgba(255,255,255,0.05);
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #e0e7ff, #f9f9ff);
+      background: var(--bg);
+      color: var(--text);
       margin: 0;
       padding: 0;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
-      overflow-y: auto;
-      color: #333;
+      transition: background 0.4s, color 0.4s;
     }
 
     .container {
-      background: white;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      background: var(--card);
+      box-shadow: 0 8px 25px var(--shadow);
       border-radius: 25px;
-      padding: 25px;
+      padding: 30px;
       width: 90%;
       max-width: 420px;
-      margin: 40px 0;
       text-align: center;
+      transition: background 0.4s, box-shadow 0.4s;
       position: relative;
-      animation: fadeIn 0.8s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(20px);}
-      to {opacity: 1; transform: translateY(0);}
     }
 
     h2 {
-      color: #4f46e5;
-      margin-bottom: 15px;
+      color: var(--primary);
+      margin-bottom: 20px;
     }
 
     input, textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 8px 0;
-      border-radius: 10px;
-      border: 1px solid #ddd;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
       font-size: 15px;
-      transition: 0.2s;
+      background: transparent;
+      color: var(--text);
+      transition: border-color 0.3s, background 0.3s;
     }
 
     input:focus, textarea:focus {
-      border-color: #4f46e5;
+      border-color: var(--primary);
+      background: rgba(79,70,229,0.08);
       outline: none;
     }
 
     button {
-      background-color: #4f46e5;
+      background-color: var(--primary);
       color: white;
-      padding: 10px 20px;
+      padding: 12px 20px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       font-size: 16px;
       margin-top: 10px;
+      width: 100%;
       transition: background 0.3s, transform 0.2s;
     }
 
@@ -78,15 +93,22 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: 15px;
-      padding: 10px 0;
+      background: rgba(79,70,229,0.08);
+      border-radius: 12px;
+      padding: 10px 15px;
+      margin-top: 10px;
+    }
+
+    .anon-toggle span {
+      font-weight: 600;
+      font-size: 14px;
     }
 
     .switch {
       position: relative;
       display: inline-block;
-      width: 50px;
-      height: 26px;
+      width: 55px;
+      height: 28px;
     }
 
     .switch input {
@@ -102,9 +124,9 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #ccc;
+      background-color: #bbb;
       transition: .4s;
-      border-radius: 26px;
+      border-radius: 28px;
     }
 
     .slider:before {
@@ -112,88 +134,62 @@
       content: "";
       height: 20px;
       width: 20px;
-      left: 3px;
-      bottom: 3px;
+      left: 4px;
+      bottom: 4px;
       background-color: white;
       transition: .4s;
       border-radius: 50%;
     }
 
     input:checked + .slider {
-      background-color: #4f46e5;
+      background-color: var(--primary);
     }
 
     input:checked + .slider:before {
-      transform: translateX(24px);
-    }
-
-    .status-box {
-      position: absolute;
-      top: -18px;
-      right: 15px;
-      background: #4f46e5;
-      color: white;
-      font-size: 13px;
-      padding: 6px 12px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% {opacity: 1; transform: scale(1);}
-      50% {opacity: 0.8; transform: scale(1.05);}
+      transform: translateX(26px);
     }
 
     .message-log {
       margin-top: 25px;
       text-align: left;
       font-size: 14px;
-      color: #444;
+      color: var(--text);
     }
 
     .message-item {
-      background: #f3f4ff;
-      border-left: 4px solid #4f46e5;
+      background: rgba(79,70,229,0.1);
+      border-left: 4px solid var(--primary);
       padding: 10px;
       border-radius: 10px;
       margin-bottom: 10px;
-      animation: slideUp 0.5s ease;
     }
 
-    @keyframes slideUp {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
+    .dark-toggle {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.3s;
     }
 
-    .success-message {
-      background: #d1fae5;
-      color: #065f46;
-      padding: 10px;
-      border-radius: 10px;
-      margin-top: 15px;
-      font-size: 14px;
-      display: none;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .error-message {
-      background: #fee2e2;
-      color: #991b1b;
-      padding: 10px;
-      border-radius: 10px;
-      margin-top: 10px;
-      font-size: 14px;
-      display: none;
+    .dark-toggle:hover {
+      transform: scale(1.1);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="status-box" id="activityBox">Anon-#### ziyaret etti</div>
+    <button class="dark-toggle" id="darkToggle">🌙</button>
     <h2>Bir mesaj bırak 💬</h2>
     <form id="messageForm">
-      <input type="text" id="nameInput" name="name" placeholder="Adınız (isteğe bağlı)" />
+      <input type="text" id="nameInput" placeholder="Adınız (isteğe bağlı)">
       <div class="anon-toggle">
         <span>Anonim olarak yaz</span>
         <label class="switch">
@@ -201,33 +197,36 @@
           <span class="slider"></span>
         </label>
       </div>
-      <textarea id="messageInput" name="message" placeholder="Mesajınızı yazın..." required></textarea>
-      <input type="text" id="passwordInput" name="password" placeholder="Yanıt alabilmek için bir şifre belirleyin (zorunlu)" required />
-      <div class="error-message" id="errorMessage">⚠️ Lütfen yanıt için bir şifre belirleyin.</div>
+      <textarea id="messageInput" placeholder="Mesajınızı yazın..." required></textarea>
+      <input type="text" id="passwordInput" placeholder="Yanıt alabilmek için bir şifre belirleyin (zorunlu)" required>
       <button type="submit">Gönder</button>
-      <div class="success-message" id="successMessage">✅ Mesajınız gönderildi!</div>
     </form>
     <div class="message-log" id="messageLog"></div>
   </div>
 
   <script>
     const FORM_ENDPOINT = "https://formspree.io/f/mldljvbb";
-
-    window.addEventListener('load', () => {
-      const anonId = Math.floor(1000 + Math.random() * 9000);
-      document.getElementById('activityBox').innerText = `Anon-${anonId} ziyaret etti`;
-      const visitData = { message: `Anon-${anonId} siteyi ziyaret etti.` };
-      navigator.sendBeacon(FORM_ENDPOINT, JSON.stringify(visitData));
-    });
-
     const anonCheck = document.getElementById('anonCheck');
     const nameInput = document.getElementById('nameInput');
     const messageInput = document.getElementById('messageInput');
     const passwordInput = document.getElementById('passwordInput');
     const messageLog = document.getElementById('messageLog');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
 
+    // 🌙 Dark mode
+    const darkToggle = document.getElementById("darkToggle");
+    darkToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      darkToggle.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+    });
+
+    // 💬 Sayfa açıldığında ziyaret bilgisi gönder
+    window.addEventListener('load', () => {
+      const visitId = Math.floor(1000 + Math.random() * 9000);
+      const visitData = { message: `Anon-${visitId} siteyi ziyaret etti.` };
+      navigator.sendBeacon(FORM_ENDPOINT, JSON.stringify(visitData));
+    });
+
+    // 🎭 Anonim seçilince isim kısmını gizle
     anonCheck.addEventListener('change', () => {
       if (anonCheck.checked) {
         nameInput.style.display = 'none';
@@ -237,21 +236,17 @@
       }
     });
 
+    // ✉️ Form gönderme işlemi
     document.getElementById('messageForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+
       const isAnon = anonCheck.checked;
       const anonId = Math.floor(1000 + Math.random() * 9000);
-      const name = isAnon ? `Anon-${anonId}` : (nameInput.value || 'İsimsiz');
+      const name = isAnon ? `Anon-${anonId}` : (nameInput.value.trim() || "İsimsiz");
       const message = messageInput.value.trim();
       const password = passwordInput.value.trim();
 
-      if (!message) return;
-      if (!password) {
-        errorMessage.style.display = 'block';
-        return;
-      } else {
-        errorMessage.style.display = 'none';
-      }
+      if (!message || !password) return alert("Lütfen tüm alanları doldurun!");
 
       const data = { name, message, password };
 
@@ -261,19 +256,37 @@
         body: JSON.stringify(data)
       });
 
+      // Mesajı ekrana yaz
       const msgBox = document.createElement('div');
       msgBox.className = 'message-item';
-      msgBox.innerText = `${name} mesaj gönderdi — cevap verilecektir, beklemede kalınız...`;
+      msgBox.textContent = `${name}: ${message}`;
       messageLog.prepend(msgBox);
 
+      // Confetti efekti 🎉
+      for (let i = 0; i < 40; i++) {
+        const conf = document.createElement('div');
+        conf.classList.add('conf');
+        conf.style.position = 'fixed';
+        conf.style.top = Math.random() * window.innerHeight + 'px';
+        conf.style.left = Math.random() * window.innerWidth + 'px';
+        conf.style.width = '8px';
+        conf.style.height = '8px';
+        conf.style.borderRadius = '50%';
+        conf.style.background = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        conf.style.transition = 'transform 2s ease, opacity 2s';
+        document.body.appendChild(conf);
+        setTimeout(() => {
+          conf.style.transform = `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg)`;
+          conf.style.opacity = 0;
+        }, 10);
+        setTimeout(() => conf.remove(), 2000);
+      }
+
+      // Alanları sıfırla
       messageInput.value = '';
       passwordInput.value = '';
-
-      successMessage.style.display = 'block';
-      setTimeout(() => {
-        successMessage.style.display = 'none';
-      }, 3000);
     });
   </script>
 </body>
-                                                                     </html>
+                                               </html>
+  
