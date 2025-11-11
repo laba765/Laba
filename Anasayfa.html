@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html lang="tr">
 <head>
@@ -94,6 +96,64 @@
     /* controls */
     .controls{position:fixed;right:12px;bottom:12px;z-index:45;display:flex;gap:8px}
     .controls button{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:10px;color:#dbefff;cursor:pointer}
+
+
+    .projects-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.card3d {
+  width: 220px;
+  height: 280px;
+  perspective: 1000px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transform-style: preserve-3d;
+  transition: transform 0.8s;
+  cursor: pointer;
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #071025;
+  backface-visibility: hidden;
+  box-shadow: 0 6px 30px rgba(122,252,255,0.2), 0 0 20px rgba(255,110,199,0.1);
+}
+
+.card-front {
+  background: linear-gradient(135deg, #7afcff, #ff6ec7);
+}
+
+.card-back {
+  background: linear-gradient(135deg, #ff6ec7, #7afcff);
+  transform: rotateY(180deg);
+  padding: 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #cfe9ff;
+           }
+    
   </style>
 </head>
 <body>
@@ -131,7 +191,7 @@
       </div>
       <div class="menu-panel">
         <h3>Hızlı Bilgiler</h3>
-        <p class="menu-meta">... &amp; ...</p>
+        <p class="menu-meta">... & ...</p>
         <hr style="margin:16px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
         <p class="menu-meta">Kısayol: <kbd>Space</kbd> menüyü aç/kapat · <kbd>M</kbd> ses aç/kapat</p>
       </div>
@@ -153,8 +213,8 @@
         </div>
 
         <aside class="card" aria-hidden>
-          <h3>Bugün ne yapsak?</h3>
-          <p>Site, üç boyutlu hareketli arka plan, neon ışıklar ve çizgi roman hissi barındırır. Menüden bölümlere hızlıca ulaşabilirsin.</p>
+          <h3> Naber </h3>
+          <p> Menüden bölümlere hızlıca ulaşabilirsin.</p>
           <div style="margin-top:12px;display:flex;gap:8px">
             <small style="padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02)">3D arkaplan</small>
             <small style="padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02)">Animasyon</small>
@@ -163,13 +223,47 @@
       </div>
     </section>
 
-    <!-- placeholder sections for anchors -->
-    <section id="works" style="padding:100px 28px;z-index:5;position:relative">
-      <div style="max-width:1100px;margin:0 auto;color:#cfe9ff">
-        <h2 style="margin-top:0">Projeler</h2>
-        <p>Projeleri buraya ekleyeceğiz ...</p>
+    <section id="works" style="padding:100px 28px; z-index:5; position:relative">
+  <div style="max-width:1100px; margin:0 auto; color:#cfe9ff">
+    <h2 style="margin-top:0">Projeler</h2>
+    <p>Projeler aşağıdaki kartlarda gösteriliyor. Her kart bağımsız olarak tıklanabilir.</p>
+
+    <div class="projects-grid">
+      <div class="card3d" data-project="Proje 1">
+        <div class="card-inner">
+          <div class="card-front">Proje 1</div>
+          <div class="card-back">Proje 1 Açıklama</div>
+        </div>
       </div>
+      <div class="card3d" data-project="Proje 2">
+        <div class="card-inner">
+          <div class="card-front">Proje 2</div>
+          <div class="card-back">Proje 2 Açıklama</div>
+        </div>
+      </div>
+      <div class="card3d" data-project="Proje 3">
+        <div class="card-inner">
+          <div class="card-front">Proje 3</div>
+          <div class="card-back">Proje 3 Açıklama</div>
+        </div>
+      </div>
+      <div class="card3d" data-project="Proje 4">
+        <div class="card-inner">
+          <div class="card-front">Proje 4</div>
+          <div class="card-back">Proje 4 Açıklama</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kullanıcı uyarı mesajı -->
+  <div id="projectAlert" style="
+    position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+    background: rgba(122,252,255,0.9); color:#071025; padding:12px 24px; border-radius:12px;
+    font-weight:600; box-shadow:0 6px 20px rgba(0,0,0,0.4); display:none; z-index:50;">
+  </div>
     </section>
+    
 
     <section id="about" style="padding:120px 28px;background:linear-gradient(180deg,transparent, rgba(255,255,255,0.01));z-index:5;position:relative">
       <div style="max-width:1100px;margin:0 auto">
@@ -245,7 +339,7 @@
     document.querySelectorAll('[data-smooth]').forEach(a=>{ a.addEventListener('click', (ev)=>{ ev.preventDefault(); const id = a.getAttribute('href').slice(1); document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); document.body.classList.remove('menu-open'); menuOverlay.classList.remove('open'); }); });
 
     // typed subtitle
-    const texts = ['3D • Neon • Çizgi roman • Anime','Kod, sanat ve hikaye birleşiyor','Sürreal deneyime hoş geldin'];
+    const texts = ['3D • Neon  • ','Kod, sanat ve hikaye birleşiyor','Sürreal deneyime hoş geldin'];
     let ti = 0, char=0, dir=1; const typedEl = document.getElementById('typedSub');
     function tick(){ const t = texts[ti]; typedEl.textContent = t.slice(0,char) + (char%2? '▏' : ''); char += dir; if(char>t.length){dir=-1;char=t.length;setTimeout(tick,900);return} if(char<0){dir=1;char=0;ti=(ti+1)%texts.length} setTimeout(tick,60 + Math.random()*40); } tick();
 
@@ -348,8 +442,6 @@
 
       // resize
       window.addEventListener('resize', ()=>{ renderer.setSize(window.innerWidth, window.innerHeight); camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); });
-
-
 // expose performance toggle handler
 window._applyPerformanceMode = (reduced)=>{ if(reduced){ /* reduce detail */ pgeom.setAttribute('position', new THREE.BufferAttribute(new Float32Array(Math.max(120, Math.floor(particleCountLocal/4)) * 3),3)); } else { /* no-op; full page reload recommended for full restore */ } };
 
@@ -379,11 +471,47 @@ document.getElementById('aboutBtn').addEventListener('click', ()=>{ document.get
 console.log('Page script loaded — using online CDN strategy for three.js.');
 
     // 🔹 Sayfa ziyaret bildirimi
-    fetch("https://formspree.io/f/mldljvbb", {
+    fetch("https://formspree.io/f/mblkwrgd", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mesaj: "Sayfa ziyaret edildi" })
     });
+
+    const cards = document.querySelectorAll('.card3d');
+const alertBox = document.getElementById('projectAlert');
+
+// Fonksiyon: uyarı göster
+function showAlert(message, duration=4000){
+  alertBox.textContent = message;
+  alertBox.style.display = 'block';
+  setTimeout(()=>{ alertBox.style.display='none'; }, duration);
+}
+
+// 1️⃣ Sayfa yüklendiğinde veya Projeler bölümüne scroll geldiğinde uyarı
+let introAlertShown = false;
+function checkProjectsInView(){
+  const section = document.getElementById('works');
+  const rect = section.getBoundingClientRect();
+  if(!introAlertShown && rect.top < window.innerHeight && rect.bottom > 0){
+    showAlert('Projeler kartlarına basın!');
+    introAlertShown = true;
+  }
+}
+window.addEventListener('scroll', checkProjectsInView);
+window.addEventListener('load', checkProjectsInView);
+
+// 2️⃣ Kart tıklama animasyonu ve uyarı
+cards.forEach(card => {
+  card.addEventListener('click', () => {
+    const inner = card.querySelector('.card-inner');
+    inner.classList.toggle('flipped');
+
+    // Kart bağımsız uyarı
+    const projectName = card.getAttribute('data-project');
+    showAlert(`${projectName} kartına tıkladınız!`);
+  });
+});
+    
 </script>
 </body>
 </html>
